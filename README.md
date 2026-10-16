@@ -21,6 +21,10 @@ Application web mobile (une seule page HTML) pour gérer les scores du jeu de ca
 
 ## Utilisation dans un navigateur
 
-Ouvrez simplement `www/index.html` dans un navigateur (PC ou smartphone), ou hébergez le fichier sur n'importe quel serveur statique (GitHub Pages, par exemple).
+Ouvrez simplement `www/index.html` dans un navigateur (PC ou smartphone), ou directement depuis ce dépôt : 
 
 ## Application Android
+
+1. Ouvrez la page [Releases](../../releases) du dépôt et téléchargez le fichier `.apk` de la dernière version.
+2. Ouvrez-le sur le téléphone et autorisez l'installation depuis cette source si Android le demande.
+3. Lancez l'appli.
