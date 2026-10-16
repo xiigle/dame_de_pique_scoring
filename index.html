@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0e2f27">
+<title>La Dame de pique</title>
+<style>
+:root{--felt:#12392f;--felt2:#0b261f;--ivory:#f3ecd9;--ink:#16130f;--red:#c8323c;--brass:#d2ab55;--mut:#9db5a9;--r:16px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--felt2);color:var(--ivory);font-family:Georgia,'Times New Roman',serif}
+body{background:radial-gradient(120% 80% at 50% 0,var(--felt) 0,var(--felt2) 70%) fixed;padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(env(safe-area-inset-bottom) + 90px) env(safe-area-inset-left)}
+#app{max-width:560px;margin:0 auto;padding:14px}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;touch-action:manipulation}
+header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.logo{width:44px;height:60px;border-radius:7px;background:var(--ivory);color:var(--ink);display:grid;place-items:center;font-size:30px;line-height:1;transform:rotate(-6deg);box-shadow:0 4px 12px #0007;flex:none;position:relative}
+.logo:before,.logo:after{content:"Q";position:absolute;font-size:11px;font-weight:700}
+.logo:before{top:3px;left:5px}.logo:after{bottom:3px;right:5px;transform:rotate(180deg)}
+h1{font-size:25px;font-style:italic;margin:0;letter-spacing:.2px}
+header small{display:block;color:var(--mut);font-size:13px;font-style:normal;margin-top:2px}
+.sp{flex:1}
+.ib{background:#ffffff14;border-radius:12px;padding:10px 12px;font-size:14px}
+.panel{background:#00000030;border:1px solid #ffffff18;border-radius:var(--r);padding:14px;margin-bottom:14px}
+.panel h2{font-size:17px;margin:0 0 10px;font-weight:700}
+label{display:block;color:var(--mut);font-size:13px;margin:10px 0 4px}
+input[type=text],input[type=number],select{width:100%;background:#ffffff12;border:1px solid #ffffff22;border-radius:12px;padding:12px;font-size:16px;outline:0}
+input:focus,select:focus{border-color:var(--brass)}
+select option{color:#000}
+.prow{display:flex;gap:8px;margin-bottom:8px}
+.prow .x{width:44px;background:#ffffff12;border-radius:12px;font-size:20px;color:var(--mut)}
+.btn{display:block;width:100%;padding:15px;border-radius:14px;font-size:17px;font-weight:700;background:var(--brass);color:var(--ink);margin-top:12px}
+.btn.alt{background:#ffffff14;color:var(--ivory);font-weight:400}
+.btn:disabled{opacity:.35}
+.btn:active,.ib:active{transform:scale(.98)}
+.rank{display:flex;align-items:center;gap:12px;background:var(--ivory);color:var(--ink);border-radius:var(--r);padding:12px 14px;margin-bottom:10px;position:relative;overflow:hidden;box-shadow:0 3px 10px #0005}
+.rank .pos{font-size:24px;width:34px;text-align:center;flex:none}
+.rank .nm{flex:1;min-width:0}
+.rank .nm b{display:block;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank .bar{height:6px;background:#16130f1a;border-radius:3px;margin-top:6px;overflow:hidden}
+.rank .bar i{display:block;height:100%;background:var(--red);border-radius:3px}
+.rank .tot{font-size:34px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.rank .dl{display:block;font-size:12px;text-align:right;color:#16130f99;margin-top:2px}
+.rank.lead{outline:3px solid var(--brass)}
+.rank.out .tot{color:var(--red)}
+.tabs{display:flex;gap:6px;margin:16px 0 10px}
+.tabs button{flex:1;padding:10px;border-radius:12px;background:#ffffff10;color:var(--mut)}
+.tabs .on{background:#ffffff26;color:var(--ivory)}
+.tw{overflow-x:auto;border-radius:12px;background:#00000030}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:15px}
+th,td{padding:9px 10px;text-align:center;white-space:nowrap}
+th{color:var(--mut);font-weight:400;font-size:13px;border-bottom:1px solid #ffffff18}
+td:first-child,th:first-child{color:var(--mut);position:sticky;left:0;background:#0d2a22}
+tr+tr td{border-top:1px solid #ffffff0d}
+td.moon{color:var(--brass)}td.z{color:#7fd19a}td.q{color:#ff8c93}
+tfoot td{font-weight:700;border-top:2px solid #ffffff30}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 16px);width:min(530px,calc(100% - 28px));padding:16px;border-radius:16px;font-size:18px;font-weight:700;background:var(--red);color:#fff;box-shadow:0 8px 24px #000a;z-index:5}
+.banner{background:linear-gradient(135deg,#e5c46e,#b88a2e);color:var(--ink);border-radius:var(--r);padding:16px;margin-bottom:14px;text-align:center;font-size:18px}
+.banner b{display:block;font-size:24px;font-style:italic}
+.empty{color:var(--mut);text-align:center;padding:20px}
+.hist{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid #ffffff12;font-size:14px}
+.hist span{color:var(--mut)}
+.modal{position:fixed;inset:0;background:#000b;z-index:10;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--felt);border-radius:22px 22px 0 0;width:100%;max-width:560px;max-height:94%;overflow:auto;padding:16px 14px calc(env(safe-area-inset-bottom) + 16px);border-top:2px solid var(--brass)}
+.sheet h2{margin:0 0 4px;font-size:21px;font-style:italic}
+.pr{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid #ffffff14}
+.pr b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:17px}
+.st{display:flex;align-items:center;gap:4px;background:#0000003a;border-radius:12px}
+.st button{width:42px;height:42px;background:none;font-size:22px;color:var(--brass)}
+.st span{min-width:30px;text-align:center;font-size:20px;font-weight:700;color:#ff8c93}
+.qb{width:46px;height:46px;border-radius:10px;background:#ffffff12;font-size:24px;color:var(--mut)}
+.qb.on{background:var(--ivory);color:var(--ink)}
+.stat{display:flex;justify-content:space-between;padding:10px 0;color:var(--mut);font-size:14px}
+.stat b{color:var(--ivory)}.stat .ok{color:#7fd19a}
+.hint{text-align:center;color:var(--brass);font-size:14px;min-height:20px}
+
+.st .num{width:auto;min-width:54px;height:42px;font-size:20px;font-weight:700;color:#ff8c93;background:#ffffff10;border-radius:10px;border-bottom:2px dotted #ff8c9388}
+.modal.mid{align-items:center;padding:14px}
+.sheet.pk{border-radius:22px;border:2px solid var(--brass);padding-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:12px}
+.gb{aspect-ratio:1;border-radius:12px;background:#ffffff16;font-size:20px;font-weight:700;color:#ff8c93}
+.gb.on{background:var(--ivory);color:var(--red)}
+.gb:disabled{opacity:.2}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:flex;background:#ffffff14;border-radius:20px;overflow:hidden}
+.chip button{background:none;padding:8px 12px;font-size:15px}
+.chip .cx{padding:8px 11px 8px 2px;color:var(--mut)}
+.lg{display:block;width:100%;text-align:left;padding:14px;margin-top:8px;border-radius:12px;background:#ffffff12;font-size:18px}
+.lg.on{background:var(--ivory);color:var(--ink)}
+.ib{min-width:44px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const KEY='dame_de_pique_v1';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LANGS={fr:'Français',en:'English',es:'Español',de:'Deutsch',it:'Italiano'};
+const T={
+fr:{title:'La Dame de pique',sub:'Carnet de scores',goal:'Objectif : {n} points',endless:'Partie sans limite',players:'Joueurs',playerN:'Joueur',add:'+ Ajouter un joueur',remove:'Retirer',saved:'Joueurs enregistrés',stopAt:"La partie s'arrête à",moonLbl:'Grand Chelem (un joueur prend les 26 points)',moonOthers:'Les autres reçoivent +26',moonSelf:'Le preneur reçoit −26',start:'Lancer la partie',last:'Dernières parties',noHist:"Aucune partie terminée pour l'instant.",rounds:'manches',over:'Partie terminée !',pts:'avec {n} points',tabRounds:'Manches',tabRules:'Règles',empty:'Aucune manche jouée. Appuyez sur « Ajouter nouvelle manche » à la fin de la première donne.',undo:'↩ Annuler la dernière manche',confUndo:'Annuler la dernière manche ?',confNew:'Abandonner la partie en cours ?',newRound:'Ajouter nouvelle manche',prolong:'Prolonger la partie (sans limite)',finish:'Terminer la partie',newGame:'Nouvelle partie',roundN:'Manche {n}',hearts:'Cœurs répartis',queen:'Dame de pique',assign:'à attribuer',moon:'★ Grand Chelem de {n} !',ok:'Valider la manche',cancel:'Annuler',pick:'Cœurs de {n}',lang:'Langue',
+rules:"Chaque <b>♥ cœur</b> vaut 1 point, la <b>Dame de pique ♠</b> vaut 13 points : 26 points par manche. Le but est d'en prendre le moins possible.<br><br><b>Grand Chelem :</b> si un joueur ramasse tous les cœurs et la Dame, il est épargné et les autres paient (ou il gagne −26, selon l'option choisie).<br><br>La partie s'arrête quand un joueur atteint l'objectif : le plus bas score gagne."},
+en:{title:'Black Lady',sub:'Score keeper',goal:'Goal: {n} points',endless:'Endless game',players:'Players',playerN:'Player',add:'+ Add a player',remove:'Remove',saved:'Saved players',stopAt:'Game ends at',moonLbl:'Shooting the moon (one player takes all 26 points)',moonOthers:'Others get +26',moonSelf:'Shooter gets −26',start:'Start game',last:'Recent games',noHist:'No finished game yet.',rounds:'rounds',over:'Game over!',pts:'with {n} points',tabRounds:'Rounds',tabRules:'Rules',empty:'No round played yet. Tap “Add new round” after the first deal.',undo:'↩ Undo last round',confUndo:'Undo the last round?',confNew:'Abandon the current game?',newRound:'Add new round',prolong:'Keep playing (no limit)',finish:'End game',newGame:'New game',roundN:'Round {n}',hearts:'Hearts assigned',queen:'Queen of spades',assign:'to assign',moon:'★ {n} shot the moon!',ok:'Confirm round',cancel:'Cancel',pick:'Hearts for {n}',lang:'Language',
+rules:'Each <b>♥ heart</b> is worth 1 point and the <b>Queen of spades ♠</b> is worth 13: 26 points per round. Take as few as possible.<br><br><b>Shooting the moon:</b> a player who takes every heart and the Queen is spared and the others pay (or they get −26, depending on the chosen option).<br><br>The game ends when a player reaches the goal: lowest score wins.'},
+es:{title:'La Dama de Picas',sub:'Marcador',goal:'Objetivo: {n} puntos',endless:'Partida sin límite',players:'Jugadores',playerN:'Jugador',add:'+ Añadir jugador',remove:'Quitar',saved:'Jugadores guardados',stopAt:'La partida termina en',moonLbl:'Gran Slam (un jugador se lleva los 26 puntos)',moonOthers:'Los demás reciben +26',moonSelf:'El jugador recibe −26',start:'Empezar partida',last:'Últimas partidas',noHist:'Aún no hay partidas terminadas.',rounds:'manos',over:'¡Partida terminada!',pts:'con {n} puntos',tabRounds:'Manos',tabRules:'Reglas',empty:'Aún no se ha jugado ninguna mano. Pulsa «Añadir nueva mano» al acabar la primera.',undo:'↩ Deshacer la última mano',confUndo:'¿Deshacer la última mano?',confNew:'¿Abandonar la partida en curso?',newRound:'Añadir nueva mano',prolong:'Seguir jugando (sin límite)',finish:'Terminar la partida',newGame:'Nueva partida',roundN:'Mano {n}',hearts:'Corazones repartidos',queen:'Dama de picas',assign:'por asignar',moon:'★ ¡{n} hace Gran Slam!',ok:'Validar la mano',cancel:'Cancelar',pick:'Corazones de {n}',lang:'Idioma',
+rules:'Cada <b>♥ corazón</b> vale 1 punto y la <b>Dama de picas ♠</b> vale 13: 26 puntos por mano. Hay que llevarse los menos posibles.<br><br><b>Gran Slam:</b> si un jugador se lleva todos los corazones y la Dama, se libra y los demás pagan (o recibe −26, según la opción elegida).<br><br>La partida termina cuando alguien alcanza el objetivo: gana quien tenga menos puntos.'},
+de:{title:'Schwarze Dame',sub:'Punktezähler',goal:'Ziel: {n} Punkte',endless:'Spiel ohne Limit',players:'Spieler',playerN:'Spieler',add:'+ Spieler hinzufügen',remove:'Entfernen',saved:'Gespeicherte Spieler',stopAt:'Das Spiel endet bei',moonLbl:'Alle Punkte (ein Spieler nimmt alle 26 Punkte)',moonOthers:'Die anderen bekommen +26',moonSelf:'Der Spieler bekommt −26',start:'Spiel starten',last:'Letzte Spiele',noHist:'Noch kein beendetes Spiel.',rounds:'Runden',over:'Spiel beendet!',pts:'mit {n} Punkten',tabRounds:'Runden',tabRules:'Regeln',empty:'Noch keine Runde gespielt. Tippe nach dem ersten Spiel auf „Neue Runde hinzufügen“.',undo:'↩ Letzte Runde rückgängig',confUndo:'Letzte Runde rückgängig machen?',confNew:'Aktuelles Spiel abbrechen?',newRound:'Neue Runde hinzufügen',prolong:'Weiterspielen (ohne Limit)',finish:'Spiel beenden',newGame:'Neues Spiel',roundN:'Runde {n}',hearts:'Verteilte Herzen',queen:'Pik-Dame',assign:'zuweisen',moon:'★ {n} hat alle Punkte genommen!',ok:'Runde bestätigen',cancel:'Abbrechen',pick:'Herzen von {n}',lang:'Sprache',
+rules:'Jedes <b>♥ Herz</b> zählt 1 Punkt, die <b>Pik-Dame ♠</b> 13 Punkte: 26 Punkte pro Runde. Ziel ist es, möglichst wenige zu nehmen.<br><br><b>Alle Punkte:</b> Nimmt ein Spieler alle Herzen und die Dame, bleibt er verschont und die anderen zahlen (oder er erhält −26, je nach Option).<br><br>Das Spiel endet, wenn jemand das Ziel erreicht: die niedrigste Punktzahl gewinnt.'},
+it:{title:'Donna di Picche',sub:'Segnapunti',goal:'Obiettivo: {n} punti',endless:'Partita senza limite',players:'Giocatori',playerN:'Giocatore',add:'+ Aggiungi giocatore',remove:'Rimuovi',saved:'Giocatori salvati',stopAt:'La partita finisce a',moonLbl:'Cappotto (un giocatore prende tutti i 26 punti)',moonOthers:'Gli altri ricevono +26',moonSelf:'Chi lo fa riceve −26',start:'Inizia la partita',last:'Ultime partite',noHist:'Nessuna partita terminata.',rounds:'mani',over:'Partita finita!',pts:'con {n} punti',tabRounds:'Mani',tabRules:'Regole',empty:'Nessuna mano giocata. Tocca «Aggiungi nuova mano» dopo la prima.',undo:"↩ Annulla l'ultima mano",confUndo:"Annullare l'ultima mano?",confNew:'Abbandonare la partita in corso?',newRound:'Aggiungi nuova mano',prolong:'Continua a giocare (senza limite)',finish:'Termina la partita',newGame:'Nuova partita',roundN:'Mano {n}',hearts:'Cuori assegnati',queen:'Donna di picche',assign:'da assegnare',moon:'★ {n} ha fatto cappotto!',ok:'Conferma la mano',cancel:'Annulla',pick:'Cuori di {n}',lang:'Lingua',
+rules:'Ogni <b>♥ cuore</b> vale 1 punto e la <b>Donna di picche ♠</b> 13: 26 punti a mano. Bisogna prenderne il meno possibile.<br><br><b>Cappotto:</b> chi prende tutti i cuori e la Donna si salva e gli altri pagano (oppure riceve −26, secondo l\'opzione scelta).<br><br>La partita finisce quando qualcuno raggiunge l\'obiettivo: vince il punteggio più basso.'}
+};
+T.fr.yes='Oui';T.en.yes='Yes';T.es.yes='Sí';T.de.yes='Ja';T.it.yes='Sì';
+let S=load();
+let draft={names:['','','',''],target:100,moon:'others'};
+let tab='scores',rd=null,lg=false,cf=null;
+function load(){
+  let d=null;try{d=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+  d=d&&d.hist?d:{game:null,hist:[]};d.names=d.names||[];
+  if(!T[d.lang]){const n=(navigator.language||'fr').slice(0,2);d.lang=T[n]?n:'fr'}
+  return d;
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const L=(k,o={})=>(T[S.lang][k]||T.fr[k]).replace(/\{(\w+)\}/g,(m,x)=>o[x]);
+const totals=g=>g.names.map((_,i)=>g.rounds.reduce((a,r)=>a+r.pts[i],0));
+const fmt=n=>n>0?'+'+n:String(n);
+
+function render(){
+  document.documentElement.lang=S.lang;document.title=L('title');
+  const g=S.game;
+  let h=`<header><div class="logo">♠</div><div><h1>${L('title')}</h1><small>${g?(g.target?L('goal',{n:g.target}):L('endless')):L('sub')}</small></div><div class="sp"></div><button class="ib" data-c="openLang" aria-label="${L('lang')}">${S.lang.toUpperCase()}</button>${g?`<button class="ib" data-c="newGame" aria-label="${L('newGame')}">⟲</button>`:''}</header>`;
+  h+=g?gameView():setupView();
+  if(rd)h+=roundModal()+(rd.pick>=0?pickModal():'');
+  if(lg)h+=langModal();
+  if(cf)h+=cfModal();
+  $('#app').innerHTML=h;
+}
+
+/* ---------- Langue ---------- */
+function langModal(){
+  return `<div class="modal" data-c="closeLang" data-bg="1"><div class="sheet"><h2>${L('lang')}</h2>${Object.entries(LANGS).map(([k,v])=>`<button class="lg ${k==S.lang?'on':''}" data-c="setLang" data-a="'${k}'">${v}</button>`).join('')}</div></div>`;
+}
+function setLang(k){S.lang=k;lg=false;save();render()}
+
+/* ---------- Préparation ---------- */
+function setupView(){
+  const n=draft.names.length,used=draft.names.map(x=>x.trim().toLowerCase());
+  let h=`<div class="panel"><h2>${L('players')}</h2>`;
+  draft.names.forEach((v,i)=>{h+=`<div class="prow"><input type="text" maxlength="14" placeholder="${L('playerN')} ${i+1}" value="${esc(v)}" data-nm="${i}">${n>3?`<button class="x" data-c="rmP" data-a="${i}" aria-label="${L('remove')}">×</button>`:''}</div>`});
+  if(n<8)h+=`<button class="btn alt" style="margin-top:4px;padding:11px" data-c="addP">${L('add')}</button>`;
+  const free=S.names.map((v,k)=>[v,k]).filter(([v])=>!used.includes(v.toLowerCase()));
+  if(free.length)h+=`<label>${L('saved')}</label><div class="chips">${free.map(([v,k])=>`<span class="chip"><button data-c="useName" data-a="${k}">${esc(v)}</button><button class="cx" data-c="delName" data-a="${k}" aria-label="${L('remove')}">×</button></span>`).join('')}</div>`;
+  h+=`<label>${L('stopAt')}</label><input type="number" inputmode="numeric" min="20" value="${draft.target}" data-ch="target">
+  <label>${L('moonLbl')}</label>
+  <select data-ch="moon"><option value="others" ${draft.moon=='others'?'selected':''}>${L('moonOthers')}</option><option value="self" ${draft.moon=='self'?'selected':''}>${L('moonSelf')}</option></select>
+  <button class="btn" data-c="start">${L('start')}</button></div>`;
+  h+=`<div class="panel"><h2>${L('last')}</h2>`;
+  if(!S.hist.length)h+=`<div class="empty">${L('noHist')}</div>`;
+  S.hist.slice(0,8).forEach(x=>{h+=`<div class="hist"><div>🏆 <b>${esc(x.winners.join(', '))}</b><br><span>${x.rounds} ${L('rounds')} · ${x.players.map((p,i)=>esc(p)+' '+x.totals[i]).join(', ')}</span></div><span>${esc(x.date)}</span></div>`});
+  return h+'</div>';
+}
+function addP(){draft.names.push('');render()}
+function rmP(i){draft.names.splice(i,1);render()}
+function useName(k){
+  let i=draft.names.findIndex(v=>!v.trim());
+  if(i<0){if(draft.names.length>=8)return;draft.names.push('');i=draft.names.length-1}
+  draft.names[i]=S.names[k];render();
+}
+function delName(k){S.names.splice(k,1);save();render()}
+function start(){
+  const typed=draft.names.map(v=>v.trim()).filter(Boolean);
+  typed.slice().reverse().forEach(v=>{S.names=S.names.filter(x=>x.toLowerCase()!=v.toLowerCase());S.names.unshift(v)});
+  S.names=S.names.slice(0,40);
+  const names=draft.names.map((v,i)=>v.trim()||L('playerN')+' '+(i+1));
+  S.game={id:Date.now(),names,target:draft.target,moon:draft.moon,rounds:[],done:false};
+  tab='scores';save();render();
+}
+function newGame(){
+  if(!S.game.done&&S.game.rounds.length)return ask(L('confNew'),doNewGame);
+  doNewGame();
+}
+function doNewGame(){
+  draft.names=S.game.names.slice();draft.target=S.game.target||100;draft.moon=S.game.moon;
+  S.game=null;save();render();
+}
+
+/* ---------- Partie ---------- */
+function archive(g){
+  const t=totals(g),m=Math.min(...t);
+  S.hist=S.hist.filter(x=>x.id!=g.id);
+  S.hist.unshift({id:g.id,date:new Date().toLocaleDateString(S.lang),players:g.names,totals:t,rounds:g.rounds.length,winners:g.names.filter((_,i)=>t[i]==m)});
+  S.hist=S.hist.slice(0,30);
+}
+function finish(){S.game.done=true;archive(S.game);save();render()}
+function prolong(){const g=S.game;g.target=0;g.done=false;S.hist=S.hist.filter(x=>x.id!=g.id);save();render()}
+function gameView(){
+  const g=S.game,t=totals(g),max=Math.max(...t),min=Math.min(...t),last=g.rounds[g.rounds.length-1];
+  if(g.target&&max>=g.target&&!g.done){g.done=true;archive(g);save()}
+  let h='';
+  if(g.done)h+=`<div class="banner">${L('over')}<b>🏆 ${esc(g.names.filter((_,i)=>t[i]==min).join(' & '))}</b>${L('pts',{n:min})}</div>`;
+  const medals=['🥇','🥈','🥉'];
+  t.map((v,i)=>i).sort((a,b)=>t[a]-t[b]).forEach((i,k)=>{
+    const pct=g.target?Math.min(100,Math.max(0,t[i]/g.target*100)):(max>0?Math.max(0,t[i]/max*100):0);
+    h+=`<div class="rank ${t[i]==min?'lead':''} ${g.target&&t[i]>=g.target?'out':''}"><div class="pos">${medals[k]||k+1}</div><div class="nm"><b>${esc(g.names[i])}</b><div class="bar"><i style="width:${pct}%"></i></div></div><div><div class="tot">${t[i]}</div><span class="dl">${last?fmt(last.pts[i]):'&nbsp;'}</span></div></div>`;
+  });
+  h+=`<div class="tabs"><button class="${tab=='scores'?'on':''}" data-c="setTab" data-a="scores">${L('tabRounds')} (${g.rounds.length})</button><button class="${tab=='regles'?'on':''}" data-c="setTab" data-a="regles">${L('tabRules')}</button></div>`;
+  if(tab=='regles'){
+    h+=`<div class="panel" style="line-height:1.5;font-size:15px">${L('rules')}</div>`;
+  }else if(!g.rounds.length){
+    h+=`<div class="empty">${L('empty')}</div>`;
+  }else{
+    h+=`<div class="tw"><table><thead><tr><th>#</th>${g.names.map(n=>`<th>${esc(n.slice(0,7))}</th>`).join('')}</tr></thead><tbody>`;
+    g.rounds.forEach((r,k)=>{h+=`<tr><td>${k+1}</td>${r.pts.map((p,i)=>`<td class="${r.moon>=0?(p==26||p==-26?'moon':''):(r.q==i?'q':'')}${p==0?' z':''}">${p}${r.q==i&&r.moon<0?' ♠':''}${r.moon==i?' ★':''}</td>`).join('')}</tr>`});
+    h+=`</tbody><tfoot><tr><td>Σ</td>${t.map(v=>`<td>${v}</td>`).join('')}</tr></tfoot></table></div>`;
+    h+=`<button class="btn alt" style="padding:11px;margin-top:12px" data-c="undo">${L('undo')}</button>`;
+  }
+  if(g.done)h+=`<button class="btn" data-c="prolong">${L('prolong')}</button><button class="btn alt" data-c="newGame">${L('newGame')}</button>`;
+  else h+=(g.target?'':`<button class="btn alt" style="padding:11px" data-c="finish">${L('finish')}</button>`)+`<button class="fab" data-c="openRound">${L('newRound')}</button>`;
+  return h;
+}
+function undo(){if(S.game.rounds.length)ask(L('confUndo'),doUndo)}
+function doUndo(){
+  const g=S.game;
+  g.rounds.pop();
+  if(g.done){g.done=false;S.hist=S.hist.filter(x=>x.id!=g.id)}
+  save();render();
+}
+
+/* ---------- Saisie d'une manche ---------- */
+function openRound(){rd={h:S.game.names.map(()=>0),q:-1,pick:-1};render()}
+function closeRound(){rd=null;render()}
+function hd(i,d){const sum=rd.h.reduce((a,b)=>a+b,0),v=rd.h[i]+d;if(v<0||(d>0&&sum>=13))return;rd.h[i]=v;render()}
+function setQ(i){rd.q=rd.q==i?-1:i;render()}
+function setH(i,v){rd.h[i]=v;rd.pick=-1;render()}
+function pickModal(){
+  const i=rd.pick,room=13-rd.h.reduce((a,b)=>a+b,0)+rd.h[i];
+  let h=`<div class="modal mid" style="z-index:20" data-c="closePick" data-bg="1"><div class="sheet pk"><h2>${L('pick',{n:esc(S.game.names[i])})}</h2><div class="grid">`;
+  for(let v=0;v<=13;v++)h+=`<button class="gb ${v==rd.h[i]?'on':''}" ${v>room?'disabled':''} data-c="setH" data-a="${i},${v}">${v}</button>`;
+  return h+'</div></div></div>';
+}
+function roundModal(){
+  const g=S.game,sum=rd.h.reduce((a,b)=>a+b,0),ok=sum==13&&rd.q>=0;
+  const full=rd.h.findIndex((v,i)=>v+(rd.q==i?13:0)==26);
+  let h=`<div class="modal" data-c="closeRound" data-bg="1"><div class="sheet"><h2>${L('roundN',{n:g.rounds.length+1})}</h2>`;
+  g.names.forEach((n,i)=>{h+=`<div class="pr"><b>${esc(n)}</b><div class="st"><button data-c="hd" data-a="${i},-1">−</button><button class="num" data-c="openPick" data-a="${i}">${rd.h[i]}♥</button><button data-c="hd" data-a="${i},1">+</button></div><button class="qb ${rd.q==i?'on':''}" data-c="setQ" data-a="${i}" aria-label="${L('queen')}">♠</button></div>`});
+  h+=`<div class="stat"><span>${L('hearts')}</span><b class="${sum==13?'ok':''}">${sum} / 13</b></div><div class="stat"><span>${L('queen')}</span><b class="${rd.q>=0?'ok':''}">${rd.q>=0?esc(g.names[rd.q]):L('assign')}</b></div>
+  <div class="hint">${full>=0?L('moon',{n:esc(g.names[full])}):''}</div>
+  <button class="btn" ${ok?'':'disabled'} data-c="saveRound">${L('ok')}</button><button class="btn alt" data-c="closeRound">${L('cancel')}</button></div></div>`;
+  return h;
+}
+function saveRound(){
+  const g=S.game;
+  let pts=rd.h.map((v,i)=>v+(rd.q==i?13:0));
+  const m=pts.findIndex(p=>p==26);
+  if(m>=0)pts=pts.map((_,i)=>g.moon=='others'?(i==m?0:26):(i==m?-26:0));
+  g.rounds.push({pts,q:rd.q,moon:m});
+  rd=null;save();render();
+  if(navigator.vibrate)navigator.vibrate(25);
+}
+function openLang(){lg=true;render()}
+function closeLang(){lg=false;render()}
+function setTab(k){tab=k;render()}
+function openPick(i){rd.pick=i;render()}
+function closePick(){rd.pick=-1;render()}
+function ask(msg,fn){cf={msg,fn};render()}
+function cfYes(){const f=cf.fn;cf=null;f()}
+function cfNo(){cf=null;render()}
+function cfModal(){
+  return `<div class="modal mid" style="z-index:30" data-c="cfNo" data-bg="1"><div class="sheet pk"><h2 style="font-size:18px;font-style:normal">${esc(cf.msg)}</h2><button class="btn" data-c="cfYes">${L('yes')}</button><button class="btn alt" data-c="cfNo">${L('cancel')}</button></div></div>`;
+}
+/* Événements : délégation (aucun gestionnaire inline, compatible aperçu sandboxé et WebView) */
+const ACT={openLang,closeLang,setLang,addP,rmP,useName,delName,start,newGame,prolong,finish,openRound,undo,setTab,closeRound,hd,openPick,closePick,setQ,setH,saveRound,cfYes,cfNo};
+const appEl=$('#app');
+appEl.addEventListener('click',e=>{
+  const el=e.target.closest('[data-c]');
+  if(!el||(el.dataset.bg&&e.target!==el))return;
+  const a=(el.dataset.a||'').split(',').filter(x=>x!=='').map(x=>x.replace(/^'|'$/g,'')).map(x=>x!==''&&!isNaN(x)?+x:x);
+  const f=ACT[el.dataset.c];if(f)f(...a);
+});
+appEl.addEventListener('input',e=>{const el=e.target;if(el.dataset.nm!==undefined)draft.names[+el.dataset.nm]=el.value});
+appEl.addEventListener('change',e=>{
+  const el=e.target,k=el.dataset.ch;
+  if(k=='target')draft.target=Math.max(20,+el.value||100);
+  if(k=='moon')draft.moon=el.value;
+});
+render();
+</script>
+</body>
+</html>
