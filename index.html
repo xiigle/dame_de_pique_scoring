@@ -88,6 +88,10 @@ tfoot td{font-weight:700;border-top:2px solid #ffffff30}
 .lg{display:block;width:100%;text-align:left;padding:14px;margin-top:8px;border-radius:12px;background:#ffffff12;font-size:18px}
 .lg.on{background:var(--ivory);color:var(--ink)}
 .ib{min-width:44px}
+html{scrollbar-gutter:stable}
+html.lock,body.lock{overflow:hidden}
+.modal,.sheet{overscroll-behavior:contain}
+.sheet{-webkit-overflow-scrolling:touch}
 </style>
 </head>
 <body>
@@ -133,6 +137,8 @@ function render(){
   if(lg)h+=langModal();
   if(cf)h+=cfModal();
   $('#app').innerHTML=h;
+  const lock=!!(rd||lg||cf);
+  document.documentElement.classList.toggle('lock',lock);document.body.classList.toggle('lock',lock);
 }
 
 /* ---------- Langue ---------- */
@@ -282,6 +288,10 @@ appEl.addEventListener('change',e=>{
   if(k=='target')draft.target=Math.max(20,+el.value||100);
   if(k=='moon')draft.moon=el.value;
 });
+/* Popups : on bloque le défilement de la page en arrière-plan */
+['touchmove','wheel'].forEach(ev=>document.addEventListener(ev,e=>{
+  if((rd||lg||cf)&&e.target.closest&&!e.target.closest('.sheet'))e.preventDefault();
+},{passive:false}));
 render();
 </script>
 </body>
