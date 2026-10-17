@@ -21,7 +21,7 @@ Application web mobile (une seule page HTML) pour gérer les scores du jeu de ca
 
 ## Utilisation dans un navigateur
 
-Ouvrez simplement `www/index.html` dans un navigateur (PC ou smartphone), ou directement depuis ce dépôt : 
+Ouvrez simplement `www/index.html` dans un navigateur (PC ou smartphone), ou directement depuis ce dépôt : [https://xiigle.github.io/dame_de_pique_scoring/](https://xiigle.github.io/dame_de_pique_scoring/)
 
 ## Application Android
 
