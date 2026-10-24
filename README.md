@@ -2,6 +2,18 @@
 
 Application web mobile (une seule page HTML) pour gérer les scores du jeu de cartes **La Dame de pique** (*Hearts* / *Black Lady*). Elle fonctionne dans n'importe quel navigateur, hors ligne.
 
+
+## 🚀 Utilisation
+
+### En local
+Télécharger le zip du dépôt, dézipper et ouvrir simplement `index.html` dans un navigateur (double-clic).
+
+### Hébergée sur GitHub Pages
+[https://xiigle.github.io/dame_de_pique_scoring/](https://xiigle.github.io/dame_de_pique_scoring/)
+
+### Sur un smartphone comme application
+Lancer l'application depuis le dépôt (lien ci-dessus) et installer via le menu du navigateur comme application (ou utiliser le lien sur la page de démarrage d'une nouvelle partie de l'application)
+
 ## Fonctionnalités
 
 - **3 à 8 joueurs**, avec noms personnalisés
@@ -18,13 +30,3 @@ Application web mobile (une seule page HTML) pour gérer les scores du jeu de ca
 - **5 langues** : français, anglais, espagnol, allemand, italien (la langue du téléphone est reprise au premier lancement)
 - **Sauvegarde automatique** : la partie en cours est reprise à la réouverture
 - Interface pensée pour smartphone (zones tactiles larges, zones sûres des écrans à encoche)
-
-## Utilisation dans un navigateur
-
-Ouvrez simplement `www/index.html` dans un navigateur (PC ou smartphone), ou directement depuis ce dépôt : [https://xiigle.github.io/dame_de_pique_scoring/](https://xiigle.github.io/dame_de_pique_scoring/)
-
-## Application Android
-
-1. Ouvrez la page [Releases](../../releases) du dépôt et téléchargez le fichier `.apk` de la dernière version.
-2. Ouvrez-le sur le téléphone et autorisez l'installation depuis cette source si Android le demande.
-3. Lancez l'appli.
