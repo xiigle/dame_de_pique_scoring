@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#0e2f27">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dame de pique">
 <title>La Dame de pique</title>
 <style>
 :root{--felt:#12392f;--felt2:#0b261f;--ivory:#f3ecd9;--ink:#16130f;--red:#c8323c;--brass:#d2ab55;--mut:#9db5a9;--r:16px}
@@ -93,6 +100,9 @@ html{scrollbar-gutter:stable}
 html.lock,body.lock{overflow:hidden}
 .modal,.sheet{overscroll-behavior:contain}
 .sheet{-webkit-overflow-scrolling:touch}
+.steps{margin:12px 0 0;padding-left:22px;line-height:1.5;font-size:16px}
+.steps li{margin-bottom:10px}
+.shr{display:inline-block;border:1.5px solid var(--brass);border-radius:6px;padding:0 6px;color:var(--brass)}
 </style>
 </head>
 <body>
@@ -114,10 +124,15 @@ rules:'Jedes <b>♥ Herz</b> zählt 1 Punkt, die <b>Pik-Dame ♠</b> 13 Punkte: 
 it:{title:'Donna di Picche',sub:'Segnapunti',goal:'Obiettivo: {n} punti',endless:'Partita senza limite',players:'Giocatori',playerN:'Giocatore',add:'+ Aggiungi giocatore',remove:'Rimuovi',saved:'Giocatori salvati',stopAt:'La partita finisce a',moonLbl:'Cappotto (un giocatore prende tutti i 26 punti)',moonOthers:'Gli altri ricevono +26',moonSelf:'Chi lo fa riceve −26',start:'Inizia la partita',last:'Ultime partite',noHist:'Nessuna partita terminata.',rounds:'mani',over:'Partita finita!',pts:'con {n} punti',tabRounds:'Mani',tabRules:'Regole',empty:'Nessuna mano giocata. Tocca «Aggiungi nuova mano» dopo la prima.',undo:"↩ Annulla l'ultima mano",confUndo:"Annullare l'ultima mano?",confNew:'Abbandonare la partita in corso?',newRound:'Aggiungi nuova mano',prolong:'Continua a giocare (senza limite)',finish:'Termina la partita',newGame:'Nuova partita',roundN:'Mano {n}',hearts:'Cuori assegnati',queen:'Donna di picche',assign:'da assegnare',moon:'★ {n} ha fatto cappotto!',ok:'Conferma la mano',cancel:'Annulla',pick:'Cuori di {n}',lang:'Lingua',
 rules:'Ogni <b>♥ cuore</b> vale 1 punto e la <b>Donna di picche ♠</b> 13: 26 punti a mano. Bisogna prenderne il meno possibile.<br><br><b>Cappotto:</b> chi prende tutti i cuori e la Donna si salva e gli altri pagano (oppure riceve −26, secondo l\'opzione scelta).<br><br>La partita finisce quando qualcuno raggiunge l\'obiettivo: vince il punteggio più basso.'}
 };
+Object.assign(T.fr,{install:`Installer l'application`,close:`Fermer`,iosTitle:`Installer sur iPhone / iPad`,ios1:`Ouvrez cette page dans <b>Safari</b>.`,ios2:`Touchez le bouton <b>Partager</b> <span class='shr'>⬆</span> en bas de l'écran.`,ios3:`Faites défiler et choisissez <b>« Sur l'écran d'accueil »</b>.`,ios4:`Touchez <b>Ajouter</b> : l'application apparaît sur votre écran d'accueil.`});
+Object.assign(T.en,{install:`Install the app`,close:`Close`,iosTitle:`Install on iPhone / iPad`,ios1:`Open this page in <b>Safari</b>.`,ios2:`Tap the <b>Share</b> button <span class='shr'>⬆</span> at the bottom of the screen.`,ios3:`Scroll down and choose <b>“Add to Home Screen”</b>.`,ios4:`Tap <b>Add</b>: the app appears on your home screen.`});
+Object.assign(T.es,{install:`Instalar la aplicación`,close:`Cerrar`,iosTitle:`Instalar en iPhone / iPad`,ios1:`Abre esta página en <b>Safari</b>.`,ios2:`Toca el botón <b>Compartir</b> <span class='shr'>⬆</span> en la parte inferior de la pantalla.`,ios3:`Desplázate y elige <b>«Añadir a pantalla de inicio»</b>.`,ios4:`Toca <b>Añadir</b>: la aplicación aparece en tu pantalla de inicio.`});
+Object.assign(T.de,{install:`App installieren`,close:`Schließen`,iosTitle:`Auf iPhone / iPad installieren`,ios1:`Öffne diese Seite in <b>Safari</b>.`,ios2:`Tippe unten auf die Schaltfläche <b>Teilen</b> <span class='shr'>⬆</span>.`,ios3:`Scrolle nach unten und wähle <b>„Zum Home-Bildschirm“</b>.`,ios4:`Tippe auf <b>Hinzufügen</b>: Die App erscheint auf deinem Home-Bildschirm.`});
+Object.assign(T.it,{install:`Installa l'app`,close:`Chiudi`,iosTitle:`Installa su iPhone / iPad`,ios1:`Apri questa pagina in <b>Safari</b>.`,ios2:`Tocca il pulsante <b>Condividi</b> <span class='shr'>⬆</span> in basso.`,ios3:`Scorri e scegli <b>«Aggiungi alla schermata Home»</b>.`,ios4:`Tocca <b>Aggiungi</b>: l'app compare nella schermata Home.`});
 T.fr.yes='Oui';T.en.yes='Yes';T.es.yes='Sí';T.de.yes='Ja';T.it.yes='Sì';
 let S=load();
 let draft={names:['','','',''],target:100,moon:'others'};
-let tab='scores',rd=null,lg=false,cf=null;
+let tab='scores',rd=null,lg=false,cf=null,ip=false,dp=null;
 function load(){
   let d=null;try{d=JSON.parse(localStorage.getItem(KEY))}catch(e){}
   d=d&&d.hist?d:{game:null,hist:[]};d.names=d.names||[];
@@ -137,8 +152,9 @@ function render(){
   if(rd)h+=roundModal()+(rd.pick>=0?pickModal():'');
   if(lg)h+=langModal();
   if(cf)h+=cfModal();
+  if(ip)h+=iosModal();
   $('#app').innerHTML=h;
-  const lock=!!(rd||lg||cf);
+  const lock=!!(rd||lg||cf||ip);
   document.documentElement.classList.toggle('lock',lock);document.body.classList.toggle('lock',lock);
   document.body.classList.toggle('fab',!!document.querySelector('.fab'));
 }
@@ -164,7 +180,7 @@ function setupView(){
   h+=`<div class="panel"><h2>${L('last')}</h2>`;
   if(!S.hist.length)h+=`<div class="empty">${L('noHist')}</div>`;
   S.hist.slice(0,8).forEach(x=>{h+=`<div class="hist"><div>🏆 <b>${esc(x.winners.join(', '))}</b><br><span>${x.rounds} ${L('rounds')} · ${x.players.map((p,i)=>esc(p)+' '+x.totals[i]).join(', ')}</span></div><span>${esc(x.date)}</span></div>`});
-  return h+'</div>';
+  return h+'</div><div id="inst">'+installBtn()+'</div>';
 }
 function addP(){draft.names.push('');render()}
 function rmP(i){draft.names.splice(i,1);render()}
@@ -276,7 +292,26 @@ function cfModal(){
   return `<div class="modal mid" style="z-index:30" data-c="cfNo" data-bg="1"><div class="sheet pk"><h2 style="font-size:18px;font-style:normal">${esc(cf.msg)}</h2><button class="btn" data-c="cfYes">${L('yes')}</button><button class="btn alt" data-c="cfNo">${L('cancel')}</button></div></div>`;
 }
 /* Événements : délégation (aucun gestionnaire inline, compatible aperçu sandboxé et WebView) */
-const ACT={openLang,closeLang,setLang,addP,rmP,useName,delName,start,newGame,prolong,finish,openRound,undo,setTab,closeRound,hd,openPick,closePick,setQ,setH,saveRound,cfYes,cfNo};
+/* ---------- Installation (PWA) ---------- */
+const isIOS=()=>/iPhone|iPad|iPod/i.test(navigator.userAgent||'')||(navigator.platform=='MacIntel'&&navigator.maxTouchPoints>1);
+const isAndroid=()=>/Android/i.test(navigator.userAgent||'');
+const isNative=()=>!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
+const standalone=()=>isNative()||navigator.standalone===true||['standalone','fullscreen','minimal-ui'].some(m=>window.matchMedia&&window.matchMedia('(display-mode: '+m+')').matches);
+const canInstall=()=>!standalone()&&(isIOS()||(isAndroid()&&!!dp));
+const installBtn=()=>canInstall()?`<button class="btn alt" data-c="install">📲 ${L('install')}</button>`:'';
+function updInstall(){const el=$('#inst');if(el)el.innerHTML=installBtn()}
+function install(){
+  if(dp){const p=dp;dp=null;p.prompt();Promise.resolve(p.userChoice).then(updInstall,updInstall);return}
+  if(isIOS()){ip=true;render()}
+}
+function closeIos(){ip=false;render()}
+function iosModal(){
+  return `<div class="modal mid" style="z-index:25" data-c="closeIos" data-bg="1"><div class="sheet pk"><h2>📲 ${L('iosTitle')}</h2><ol class="steps"><li>${L('ios1')}</li><li>${L('ios2')}</li><li>${L('ios3')}</li><li>${L('ios4')}</li></ol><button class="btn" data-c="closeIos">${L('close')}</button></div></div>`;
+}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;updInstall()});
+window.addEventListener('appinstalled',()=>{dp=null;updInstall()});
+if('serviceWorker' in navigator&&/^https?:$/.test((window.location||{}).protocol)&&!isNative())window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+const ACT={openLang,closeLang,setLang,addP,rmP,useName,delName,start,newGame,prolong,finish,openRound,undo,setTab,closeRound,hd,openPick,closePick,setQ,setH,saveRound,cfYes,cfNo,install,closeIos};
 const appEl=$('#app');
 appEl.addEventListener('click',e=>{
   const el=e.target.closest('[data-c]');
@@ -292,7 +327,7 @@ appEl.addEventListener('change',e=>{
 });
 /* Popups : on bloque le défilement de la page en arrière-plan */
 ['touchmove','wheel'].forEach(ev=>document.addEventListener(ev,e=>{
-  if((rd||lg||cf)&&e.target.closest&&!e.target.closest('.sheet'))e.preventDefault();
+  if((rd||lg||cf||ip)&&e.target.closest&&!e.target.closest('.sheet'))e.preventDefault();
 },{passive:false}));
 render();
 </script>
